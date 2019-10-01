@@ -1,0 +1,101 @@
+---
+title: "p8105_hw2_ebm2142"
+author: "Elise Mantell"
+date: 2019-10-04
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(readxl)
+library(ggplot2)
+```
+### Problem 1
+
+#### Read and clean the Mr. Trash Wheel sheet
+
+```{r reading trash data}
+Mr_TW = read_excel("./data/HealthyHarborWaterWheelTotals2018-7-28.xlsx", range = "A2:N408", sheet = 1) %>% 
+janitor::clean_names() %>% 
+filter(dumpster != "NA") %>% 
+mutate(sports_balls = as.integer(round(sports_balls))) %>% 
+rename("weight" = weight_tons, "volume" = volume_cubic_yards)
+```
+
+#### Read and clean precipitation data for 2017 and 2018. For each, omit rows without precipitation data and add a variable year
+
+
+```{r reading precip data}
+#2017 data
+precip_17 = read_excel("./data/HealthyHarborWaterWheelTotals2018-7-28.xlsx", sheet = "2017 Precipitation", range = "A2:B14") %>% 
+  janitor::clean_names() %>% 
+  filter(total != "NA") %>% 
+#adding variable
+  mutate(year = 2017)
+
+#2018 data
+precip_18 = read_excel("./data/HealthyHarborWaterWheelTotals2018-7-28.xlsx",sheet = "2018 Precipitation", range = "A2:B14") %>% 
+  janitor::clean_names() %>% 
+  filter(total != "NA") %>% 
+#adding variable
+mutate(year = 2018)
+
+```
+
+#### Combine precipitation datasets and convert month to a character variable (the variable month.name is built into R and should be useful).
+
+```{r combining and converting month variable}
+precip_17_18 =
+  left_join(precip_17, precip_18, by = 'month') %>% 
+  mutate(month = month.name[month])
+```
+
+#### Write a paragraph about these data
+* Be sure to note the number of observations in both resulting datasets
+* Give examples of key variables
+* What was the total precipitation in 2018? 
+* What was the median number of sports balls in a dumpster in 2017? 
+
+```{r Describing the data inline}
+#In total there are 12 observations in precipitation 
+
+```
+
+### Problem 2
+
+#### Clean the data in pols-month.csv. Use separate() to break up the variable mon into integer variables year, month, and day; replace month number with month name; create a president variable taking values gop and dem, and remove prez_dem and prez_gop; and remove the day variable.
+
+```{r cleaning pols-month}
+pols_month = read_csv("./data/pols-month.csv") %>%
+  janitor::clean_names() %>% 
+  separate("mon", into = c("year", "month", "day")) %>% 
+  mutate(month = month.name[as.integer(month)]) %>% 
+  rename("gop" = prez_gop, "dem"= prez_dem)
+```
+
+#### Second, clean the data in snp.csv using a similar process to the above. For consistency across datasets, arrange according to year and month, and organize so that year and month are the leading columns.
+
+```{r cleaning snp}
+snp = read_csv("./data/snp.csv") %>% 
+  janitor::clean_names() %>% 
+  separate("date", into = c("day", "month", "year")) %>% 
+  select("year", "month", "day", "close") %>% 
+  mutate(month = month.name[as.integer(month)]) %>% 
+```
+
+#### Third, tidy the unemployment data so that it can be merged with the previous datasets. This process will involve switching from “wide” to “long” format; ensuring that key variables have the same name; and ensuring that key variables take the same values.
+
+```{r cleaning unemployment}
+unemployment = read_csv("./data/unemployment.csv") %>% 
+  janitor::clean_names() %>% 
+  pivot_longer(jan:dec, names_to = "month" values "count")
+```
+#### Join the datasets by merging snp into pols, and merging unemployment into the result.
+
+```{r merging snp into pols and unemployment into that}
+snp_pols_merge = full_join(snp, pols_month, by = "year")
+snp_pols_unemployment_merg = left_join(snp_pols_merge, unemployment, by = 'year')
+```
+
+#### Write a short paragraph about these datasets. Explain briefly what each dataset contained, and describe the resulting dataset (e.g. give the dimension, range of years, and names of key variables).
