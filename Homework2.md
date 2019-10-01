@@ -37,7 +37,7 @@ mutate(year = 2018)
 
 ``` r
 precip_17_18 =
-  left_join(precip_17, precip_18, by = 'month') %>% 
+  left_join(precip_17, precip_18, by = "month") %>% 
   mutate(month = month.name[month])
 ```
 
@@ -74,7 +74,48 @@ sum((pull(precip_18, total)))
 
 ``` r
 # The median number of sports balls in a dumpster in 2017 was
-median(pull(Mr_TW, sports_balls)[which(Mr_TW$year == 2017)])
+median(pull(Mr_TW %>% filter(year == 2017), sports_balls))
 ```
 
     ## [1] 8
+
+### Problem 2
+
+#### Clean the data in pols-month.csv. Use separate() to break up the variable mon into integer variables year, month, and day; replace month number with month name; create a president variable taking values gop and dem, and remove prez\_dem and prez\_gop; and remove the day variable.
+
+``` r
+pols_month = read_csv("./data/pols-month.csv") %>%
+  janitor::clean_names() %>% 
+  separate("mon", into = c("year", "month", "day")) %>% 
+  mutate(month = month.name[as.integer(month)]) %>% 
+  rename("gop" = prez_gop, "dem"= prez_dem)
+```
+
+    ## Parsed with column specification:
+    ## cols(
+    ##   mon = col_date(format = ""),
+    ##   prez_gop = col_double(),
+    ##   gov_gop = col_double(),
+    ##   sen_gop = col_double(),
+    ##   rep_gop = col_double(),
+    ##   prez_dem = col_double(),
+    ##   gov_dem = col_double(),
+    ##   sen_dem = col_double(),
+    ##   rep_dem = col_double()
+    ## )
+
+#### Second, clean the data in snp.csv using a similar process to the above. For consistency across datasets, arrange according to year and month, and organize so that year and month are the leading columns.
+
+``` r
+snp = read_csv("./data/snp.csv") %>% 
+  janitor::clean_names() %>% 
+  separate("date", into = c("day", "month", "year")) %>% 
+  select("year", "month", "day", "close") %>% 
+  mutate(month = month.name[as.integer(month)]) 
+```
+
+    ## Parsed with column specification:
+    ## cols(
+    ##   date = col_character(),
+    ##   close = col_double()
+    ## )
