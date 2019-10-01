@@ -32,3 +32,11 @@ precip_18 = read_excel("./data/Trash-Wheel-Collection-Totals-8-6-19.xlsx",sheet 
 #adding variable
 mutate(year = 2018)
 ```
+
+#### Combine precipitation datasets and convert month to a character variable (the variable month.name is built into R and should be useful).
+
+``` r
+precip_17_18 =
+  left_join(precip_17, precip_18, by = 'month') %>% 
+  mutate(month = month.name[month])
+```
