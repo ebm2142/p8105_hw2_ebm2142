@@ -40,3 +40,41 @@ precip_17_18 =
   left_join(precip_17, precip_18, by = 'month') %>% 
   mutate(month = month.name[month])
 ```
+
+#### Write a paragraph about these data
+
+  - Be sure to note the number of observations in both resulting
+    datasets
+  - Give examples of key variables
+  - What was the total precipitation in 2018?
+  - What was the median number of sports balls in a dumpster in 2017?
+
+<!-- end list -->
+
+``` r
+# The number of observations in the precipitation dataset
+nrow(precip_17_18)
+```
+
+    ## [1] 12
+
+``` r
+# The number of observations in the Mr Trashwheel dataset
+nrow(Mr_TW)
+```
+
+    ## [1] 344
+
+``` r
+# The total precipitation in 2018 was
+sum((pull(precip_18, total)))
+```
+
+    ## [1] 70.33
+
+``` r
+# The median number of sports balls in a dumpster in 2017 was
+median(pull(Mr_TW, sports_balls)[which(Mr_TW$year == 2017)])
+```
+
+    ## [1] 8
