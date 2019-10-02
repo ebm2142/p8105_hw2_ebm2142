@@ -54,14 +54,14 @@ precip_17_18 =
 <!-- end list -->
 
 ``` r
-# The number of observations in the precipitation dataset
+# The number of observations in the precipitation dataset is
 nrow(precip_17_18)
 ```
 
     ## [1] 24
 
 ``` r
-# The number of observations in the Mr Trashwheel dataset
+# The number of observations in the Mr Trashwheel dataset is
 nrow(Mr_TW)
 ```
 
@@ -137,3 +137,23 @@ unemployment = read_csv("./data/unemployment.csv", col_types = "cdddddddddddd") 
 snp_pols = left_join(snp, pols_month, by = c("year","month"))
 snp_pols_unemp = left_join(snp_pols, unemployment, by = c("year","month"))
 ```
+
+#### Write a short paragraph about these datasets. Explain briefly what each dataset contained, and describe the resulting dataset (e.g. give the dimension, range of years, and names of key variables).
+
+``` r
+nrow(snp_pols_unemp)
+```
+
+    ## [1] 787
+
+``` r
+range(pull(snp_pols_unemp, year))
+```
+
+    ## [1] "1950" "2015"
+
+##### The dataset “pols-month” contains 822 observations of 9 variables related to the number of national politicians who are democratic or republican at a given time (“gop” and “dem” variables indicating if the president was a republican or democrat, with similar variables for senate, house of representatives, and governors). The dataset “snp” contains 787 observations the position of the Standard & Poor’s stock market index (S\&P) at close (represented by variable “close”). The dataset “unemployment” contains 68 observations of 13 variables, showing the unemployment percentage for each month of the year. The combined dataset containing all three of these includes 787 observations over the years 1950 to 2015.
+
+### Problem 3
+
+#### Load and tidy the data. Note that, although these data may seem fairly well formatted initially, the names of a categorical predictor and the case structure of string variables changed over time; you’ll need to address this in your data cleaning. Also, some rows seem duplicated, and these will need to be removed (hint: google something like “dplyr remove duplicate rows” to get started).
