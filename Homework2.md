@@ -37,9 +37,11 @@ mutate(year = 2018)
 
 ``` r
 precip_17_18 =
-  left_join(precip_17, precip_18, by = "month") %>% 
+  full_join(precip_17, precip_18) %>% 
   mutate(month = month.name[month])
 ```
+
+    ## Joining, by = c("month", "total", "year")
 
 #### Write a paragraph about these data
 
@@ -56,7 +58,7 @@ precip_17_18 =
 nrow(precip_17_18)
 ```
 
-    ## [1] 12
+    ## [1] 24
 
 ``` r
 # The number of observations in the Mr Trashwheel dataset
@@ -87,7 +89,7 @@ median(pull(Mr_TW %>% filter(year == 2017), sports_balls))
 pols_month = read_csv("./data/pols-month.csv") %>%
   janitor::clean_names() %>% 
   separate("mon", into = c("year", "month", "day")) %>% 
-  mutate(month = month.name[as.integer(month)]) %>% 
+  mutate(month = month.abb[as.integer(month)],month =  str_to_lower(month)) %>% 
   rename("gop" = prez_gop, "dem"= prez_dem)
 ```
 
@@ -111,7 +113,7 @@ snp = read_csv("./data/snp.csv") %>%
   janitor::clean_names() %>% 
   separate("date", into = c("day", "month", "year")) %>% 
   select("year", "month", "day", "close") %>% 
-  mutate(month = month.name[as.integer(month)]) 
+  mutate(month = month.abb[as.integer(month)],month =  str_to_lower(month))
 ```
 
     ## Parsed with column specification:
@@ -119,3 +121,31 @@ snp = read_csv("./data/snp.csv") %>%
     ##   date = col_character(),
     ##   close = col_double()
     ## )
+
+#### Third, tidy the unemployment data so that it can be merged with the previous datasets. This process will involve switching from “wide” to “long” format; ensuring that key variables have the same name; and ensuring that key variables take the same values.
+
+``` r
+unemployment = read_csv("./data/unemployment.csv") %>% 
+  janitor::clean_names() %>% 
+  pivot_longer(jan:dec, 
+  names_to = "month", values_to = "rate") 
+```
+
+    ## Parsed with column specification:
+    ## cols(
+    ##   Year = col_double(),
+    ##   Jan = col_double(),
+    ##   Feb = col_double(),
+    ##   Mar = col_double(),
+    ##   Apr = col_double(),
+    ##   May = col_double(),
+    ##   Jun = col_double(),
+    ##   Jul = col_double(),
+    ##   Aug = col_double(),
+    ##   Sep = col_double(),
+    ##   Oct = col_double(),
+    ##   Nov = col_double(),
+    ##   Dec = col_double()
+    ## )
+
+#### Join the datasets by merging snp into pols, and merging unemployment into the result.
