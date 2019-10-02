@@ -125,27 +125,15 @@ snp = read_csv("./data/snp.csv") %>%
 #### Third, tidy the unemployment data so that it can be merged with the previous datasets. This process will involve switching from “wide” to “long” format; ensuring that key variables have the same name; and ensuring that key variables take the same values.
 
 ``` r
-unemployment = read_csv("./data/unemployment.csv") %>% 
+unemployment = read_csv("./data/unemployment.csv", col_types = "cdddddddddddd") %>% 
   janitor::clean_names() %>% 
   pivot_longer(jan:dec, 
   names_to = "month", values_to = "rate") 
 ```
 
-    ## Parsed with column specification:
-    ## cols(
-    ##   Year = col_double(),
-    ##   Jan = col_double(),
-    ##   Feb = col_double(),
-    ##   Mar = col_double(),
-    ##   Apr = col_double(),
-    ##   May = col_double(),
-    ##   Jun = col_double(),
-    ##   Jul = col_double(),
-    ##   Aug = col_double(),
-    ##   Sep = col_double(),
-    ##   Oct = col_double(),
-    ##   Nov = col_double(),
-    ##   Dec = col_double()
-    ## )
-
 #### Join the datasets by merging snp into pols, and merging unemployment into the result.
+
+``` r
+snp_pols = left_join(snp, pols_month, by = c("year","month"))
+snp_pols_unemp = left_join(snp_pols, unemployment, by = c("year","month"))
+```
