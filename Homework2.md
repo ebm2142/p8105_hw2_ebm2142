@@ -240,3 +240,12 @@ baby_name %>%
 | 2011 | MALE   | WHITE NON HISPANIC         | MICHAEL | 292   | 1    |
 
 #### Finally, for male, white non-hispanic children born in 2016, produce a scatter plot showing the number of children with a name (y axis) against the rank in popularity of that name (x axis)
+
+``` r
+baby_name %>%
+  filter(ethnicity == "WHITE NON HISPANIC", gender == "MALE") %>%
+  ggplot(aes(x = rank, y = count)) + 
+  geom_point()
+```
+
+![](Homework2_files/figure-gfm/producing%20scatterplot-1.png)<!-- -->
