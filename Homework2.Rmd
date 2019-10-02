@@ -123,7 +123,25 @@ baby_name = read_csv("./data/Popular_Baby_Names.csv", col_types = "icccii") %>%
 janitor::clean_names() %>% 
 distinct() %>% 
 mutate_all(toupper) %>% 
+rename("year" = year_of_birth, "name" = childs_first_name) %>% 
 mutate(ethnicity = replace(ethnicity, ethnicity == "ASIAN AND PACI", "ASIAN AND PACIFIC ISLANDER")) %>% 
 mutate(ethnicity = replace(ethnicity, ethnicity == "BLACK NON HISP","BLACK NON HISPANIC")) %>%
 mutate(ethnicity = replace(ethnicity, ethnicity == "WHITE NON HISP", "WHITE NON HISPANIC"))
 ```
+
+#### Produce a well-structured, reader-friendly table showing the rank in popularity of the name “Olivia” as a female baby name over time; this should have rows for ethnicities and columns for year. Produce a similar table showing the most popular name among male children over time.
+
+```{r producing Olivia table}
+baby_name %>%
+  group_by(year, ethnicity, rank) %>% 
+  filter(name == "OLIVIA") %>%
+  knitr::kable(digits = 1)
+```
+```{r producing male top baby name table}
+baby_name %>%
+  group_by(year, ethnicity, name) %>% 
+  filter(rank == 1, gender == "MALE") %>%
+  knitr::kable(digits = 1)
+```
+
+#### Finally, for male, white non-hispanic children born in 2016, produce a scatter plot showing the number of children with a name (y axis) against the rank in popularity of that name (x axis)
