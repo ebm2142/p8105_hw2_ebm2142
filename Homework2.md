@@ -51,35 +51,17 @@ precip_17_18 =
   - What was the total precipitation in 2018?
   - What was the median number of sports balls in a dumpster in 2017?
 
-<!-- end list -->
-
-``` r
-# The number of observations in the precipitation dataset is
-nrow(precip_17_18)
-```
-
-    ## [1] 24
-
-``` r
-# The number of observations in the Mr Trashwheel dataset is
-nrow(Mr_TW)
-```
-
-    ## [1] 344
-
-``` r
-# The total precipitation in 2018 was
-sum((pull(precip_18, total)))
-```
-
-    ## [1] 70.33
-
-``` r
-# The median number of sports balls in a dumpster in 2017 was
-median(pull(Mr_TW %>% filter(year == 2017), sports_balls))
-```
-
-    ## [1] 8
+The Mr Trashwheel dataset includes information about trash filtered
+through the adorable googly-eyed trash wheel in the Baltimore Harbor. It
+also includes information about precipitation levels (because they
+affect the amount of trash coming through). Key variables include
+“total” for the total precipitation, as well as variables describing
+the trash contents (for example “sports\_balls”). The number of
+observations in the precipitation dataset is 24. The number of
+observations in the Mr Trashwheel dataset is 344. The total
+precipitation in 2018 was 70.33. The median number of sports balls in a
+dumpster in 2017 was
+8
 
 ### Problem 2
 
@@ -245,7 +227,7 @@ baby_name %>%
 
 ``` r
 baby_name %>%
-  filter(ethnicity == "WHITE NON HISPANIC", gender == "MALE") %>%
+  filter(ethnicity == "WHITE NON HISPANIC", gender == "MALE", year == 2016) %>%
   ggplot(aes(x = rank, y = count)) + 
   geom_point()
 ```

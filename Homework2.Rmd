@@ -54,20 +54,9 @@ precip_17_18 =
 * What was the total precipitation in 2018? 
 * What was the median number of sports balls in a dumpster in 2017? 
 
-```{r describing}
+The Mr Trashwheel dataset includes information about trash filtered through the adorable googly-eyed trash wheel in the Baltimore Harbor. It also includes information about precipitation levels (because they affect the amount of trash coming through). Key variables include "total" for the total precipitation, as well as variables describing the trash contents (for example "sports_balls").
+The number of observations in the precipitation dataset is `r nrow(precip_17_18)`. The number of observations in the Mr Trashwheel dataset is `r nrow(Mr_TW)`. The total precipitation in 2018 was `r sum((pull(precip_18, total)))`. The median number of sports balls in a dumpster in 2017 was `r median(pull(Mr_TW %>% filter(year == 2017), sports_balls))`
 
-# The number of observations in the precipitation dataset is
-nrow(precip_17_18)
-
-# The number of observations in the Mr Trashwheel dataset is
-nrow(Mr_TW)
-
-# The total precipitation in 2018 was
-sum((pull(precip_18, total)))
-
-# The median number of sports balls in a dumpster in 2017 was
-median(pull(Mr_TW %>% filter(year == 2017), sports_balls))
-```
 ### Problem 2
 
 #### Clean the data in pols-month.csv. Use separate() to break up the variable mon into integer variables year, month, and day; replace month number with month name; create a president variable taking values gop and dem, and remove prez_dem and prez_gop; and remove the day variable.
@@ -150,7 +139,7 @@ baby_name %>%
 
 ```{r producing scatterplot}
 baby_name %>%
-  filter(ethnicity == "WHITE NON HISPANIC", gender == "MALE") %>%
+  filter(ethnicity == "WHITE NON HISPANIC", gender == "MALE", year == 2016) %>%
   ggplot(aes(x = rank, y = count)) + 
   geom_point()
 ```
