@@ -133,14 +133,16 @@ mutate(ethnicity = replace(ethnicity, ethnicity == "WHITE NON HISP", "WHITE NON 
 
 ```{r producing Olivia table}
 baby_name %>%
-  group_by(year, ethnicity, rank) %>% 
+  group_by(year) %>% 
   filter(name == "OLIVIA") %>%
+  select(year, ethnicity, rank) %>%
   knitr::kable(digits = 1)
 ```
 ```{r producing male top baby name table}
 baby_name %>%
   group_by(year, ethnicity, name) %>% 
   filter(rank == 1, gender == "MALE") %>%
+  select(year, ethnicity, rank, name) %>%
   knitr::kable(digits = 1)
 ```
 

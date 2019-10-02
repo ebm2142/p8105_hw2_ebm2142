@@ -173,71 +173,73 @@ mutate(ethnicity = replace(ethnicity, ethnicity == "WHITE NON HISP", "WHITE NON 
 
 ``` r
 baby_name %>%
-  group_by(year, ethnicity, rank) %>% 
+  group_by(year) %>% 
   filter(name == "OLIVIA") %>%
+  select(year, ethnicity, rank) %>%
   knitr::kable(digits = 1)
 ```
 
-| year | gender | ethnicity                  | name   | count | rank |
-| :--- | :----- | :------------------------- | :----- | :---- | :--- |
-| 2016 | FEMALE | ASIAN AND PACIFIC ISLANDER | OLIVIA | 172   | 1    |
-| 2016 | FEMALE | BLACK NON HISPANIC         | OLIVIA | 49    | 8    |
-| 2016 | FEMALE | HISPANIC                   | OLIVIA | 108   | 13   |
-| 2016 | FEMALE | WHITE NON HISPANIC         | OLIVIA | 230   | 1    |
-| 2015 | FEMALE | ASIAN AND PACIFIC ISLANDER | OLIVIA | 188   | 1    |
-| 2015 | FEMALE | BLACK NON HISPANIC         | OLIVIA | 82    | 4    |
-| 2015 | FEMALE | HISPANIC                   | OLIVIA | 94    | 16   |
-| 2015 | FEMALE | WHITE NON HISPANIC         | OLIVIA | 225   | 1    |
-| 2014 | FEMALE | ASIAN AND PACIFIC ISLANDER | OLIVIA | 141   | 1    |
-| 2014 | FEMALE | BLACK NON HISPANIC         | OLIVIA | 52    | 8    |
-| 2014 | FEMALE | HISPANIC                   | OLIVIA | 96    | 16   |
-| 2014 | FEMALE | WHITE NON HISPANIC         | OLIVIA | 248   | 1    |
-| 2013 | FEMALE | ASIAN AND PACIFIC ISLANDER | OLIVIA | 109   | 3    |
-| 2013 | FEMALE | BLACK NON HISPANIC         | OLIVIA | 64    | 6    |
-| 2013 | FEMALE | HISPANIC                   | OLIVIA | 87    | 22   |
-| 2013 | FEMALE | WHITE NON HISPANIC         | OLIVIA | 233   | 1    |
-| 2012 | FEMALE | ASIAN AND PACIFIC ISLANDER | OLIVIA | 132   | 3    |
-| 2012 | FEMALE | BLACK NON HISPANIC         | OLIVIA | 58    | 8    |
-| 2012 | FEMALE | HISPANIC                   | OLIVIA | 77    | 22   |
-| 2012 | FEMALE | WHITE NON HISPANIC         | OLIVIA | 198   | 4    |
-| 2011 | FEMALE | ASIAN AND PACIFIC ISLANDER | OLIVIA | 89    | 4    |
-| 2011 | FEMALE | BLACK NON HISPANIC         | OLIVIA | 52    | 10   |
-| 2011 | FEMALE | HISPANIC                   | OLIVIA | 86    | 18   |
-| 2011 | FEMALE | WHITE NON HISPANIC         | OLIVIA | 213   | 2    |
+| year | ethnicity                  | rank |
+| :--- | :------------------------- | :--- |
+| 2016 | ASIAN AND PACIFIC ISLANDER | 1    |
+| 2016 | BLACK NON HISPANIC         | 8    |
+| 2016 | HISPANIC                   | 13   |
+| 2016 | WHITE NON HISPANIC         | 1    |
+| 2015 | ASIAN AND PACIFIC ISLANDER | 1    |
+| 2015 | BLACK NON HISPANIC         | 4    |
+| 2015 | HISPANIC                   | 16   |
+| 2015 | WHITE NON HISPANIC         | 1    |
+| 2014 | ASIAN AND PACIFIC ISLANDER | 1    |
+| 2014 | BLACK NON HISPANIC         | 8    |
+| 2014 | HISPANIC                   | 16   |
+| 2014 | WHITE NON HISPANIC         | 1    |
+| 2013 | ASIAN AND PACIFIC ISLANDER | 3    |
+| 2013 | BLACK NON HISPANIC         | 6    |
+| 2013 | HISPANIC                   | 22   |
+| 2013 | WHITE NON HISPANIC         | 1    |
+| 2012 | ASIAN AND PACIFIC ISLANDER | 3    |
+| 2012 | BLACK NON HISPANIC         | 8    |
+| 2012 | HISPANIC                   | 22   |
+| 2012 | WHITE NON HISPANIC         | 4    |
+| 2011 | ASIAN AND PACIFIC ISLANDER | 4    |
+| 2011 | BLACK NON HISPANIC         | 10   |
+| 2011 | HISPANIC                   | 18   |
+| 2011 | WHITE NON HISPANIC         | 2    |
 
 ``` r
 baby_name %>%
   group_by(year, ethnicity, name) %>% 
   filter(rank == 1, gender == "MALE") %>%
+  select(year, ethnicity, rank, name) %>%
   knitr::kable(digits = 1)
 ```
 
-| year | gender | ethnicity                  | name    | count | rank |
-| :--- | :----- | :------------------------- | :------ | :---- | :--- |
-| 2016 | MALE   | ASIAN AND PACIFIC ISLANDER | ETHAN   | 193   | 1    |
-| 2016 | MALE   | BLACK NON HISPANIC         | NOAH    | 148   | 1    |
-| 2016 | MALE   | HISPANIC                   | LIAM    | 387   | 1    |
-| 2016 | MALE   | WHITE NON HISPANIC         | JOSEPH  | 261   | 1    |
-| 2015 | MALE   | ASIAN AND PACIFIC ISLANDER | JAYDEN  | 190   | 1    |
-| 2015 | MALE   | BLACK NON HISPANIC         | NOAH    | 163   | 1    |
-| 2015 | MALE   | HISPANIC                   | LIAM    | 356   | 1    |
-| 2015 | MALE   | WHITE NON HISPANIC         | DAVID   | 299   | 1    |
-| 2014 | MALE   | ASIAN AND PACIFIC ISLANDER | JAYDEN  | 187   | 1    |
-| 2014 | MALE   | BLACK NON HISPANIC         | ETHAN   | 138   | 1    |
-| 2014 | MALE   | HISPANIC                   | LIAM    | 312   | 1    |
-| 2014 | MALE   | WHITE NON HISPANIC         | JOSEPH  | 300   | 1    |
-| 2013 | MALE   | ASIAN AND PACIFIC ISLANDER | JAYDEN  | 220   | 1    |
-| 2013 | MALE   | BLACK NON HISPANIC         | ETHAN   | 146   | 1    |
-| 2013 | MALE   | HISPANIC                   | JAYDEN  | 352   | 1    |
-| 2013 | MALE   | WHITE NON HISPANIC         | DAVID   | 304   | 1    |
-| 2012 | MALE   | ASIAN AND PACIFIC ISLANDER | RYAN    | 197   | 1    |
-| 2012 | MALE   | BLACK NON HISPANIC         | JAYDEN  | 171   | 1    |
-| 2012 | MALE   | HISPANIC                   | JAYDEN  | 364   | 1    |
-| 2012 | MALE   | WHITE NON HISPANIC         | JOSEPH  | 300   | 1    |
-| 2011 | MALE   | ASIAN AND PACIFIC ISLANDER | ETHAN   | 177   | 1    |
-| 2011 | MALE   | BLACK NON HISPANIC         | JAYDEN  | 184   | 1    |
-| 2011 | MALE   | HISPANIC                   | JAYDEN  | 426   | 1    |
-| 2011 | MALE   | WHITE NON HISPANIC         | MICHAEL | 292   | 1    |
+| year | ethnicity                  | rank | name    |
+| :--- | :------------------------- | :--- | :------ |
+| 2016 | ASIAN AND PACIFIC ISLANDER | 1    | ETHAN   |
+| 2016 | BLACK NON HISPANIC         | 1    | NOAH    |
+| 2016 | HISPANIC                   | 1    | LIAM    |
+| 2016 | WHITE NON HISPANIC         | 1    | JOSEPH  |
+| 2015 | ASIAN AND PACIFIC ISLANDER | 1    | JAYDEN  |
+| 2015 | BLACK NON HISPANIC         | 1    | NOAH    |
+| 2015 | HISPANIC                   | 1    | LIAM    |
+| 2015 | WHITE NON HISPANIC         | 1    | DAVID   |
+| 2014 | ASIAN AND PACIFIC ISLANDER | 1    | JAYDEN  |
+| 2014 | BLACK NON HISPANIC         | 1    | ETHAN   |
+| 2014 | HISPANIC                   | 1    | LIAM    |
+| 2014 | WHITE NON HISPANIC         | 1    | JOSEPH  |
+| 2013 | ASIAN AND PACIFIC ISLANDER | 1    | JAYDEN  |
+| 2013 | BLACK NON HISPANIC         | 1    | ETHAN   |
+| 2013 | HISPANIC                   | 1    | JAYDEN  |
+| 2013 | WHITE NON HISPANIC         | 1    | DAVID   |
+| 2012 | ASIAN AND PACIFIC ISLANDER | 1    | RYAN    |
+| 2012 | BLACK NON HISPANIC         | 1    | JAYDEN  |
+| 2012 | HISPANIC                   | 1    | JAYDEN  |
+| 2012 | WHITE NON HISPANIC         | 1    | JOSEPH  |
+| 2011 | ASIAN AND PACIFIC ISLANDER | 1    | ETHAN   |
+| 2011 | BLACK NON HISPANIC         | 1    | JAYDEN  |
+| 2011 | HISPANIC                   | 1    | JAYDEN  |
+| 2011 | WHITE NON HISPANIC         | 1    | MICHAEL |
 
 #### Finally, for male, white non-hispanic children born in 2016, produce a scatter plot showing the number of children with a name (y axis) against the rank in popularity of that name (x axis)
 
