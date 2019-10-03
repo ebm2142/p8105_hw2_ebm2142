@@ -141,15 +141,28 @@ range(pull(snp_pols_unemp, year))
 #### Load and tidy the data. The names of a categorical predictor and the case structure of string variables changed over time; you’ll need to address this in your data cleaning. Also, some rows seem duplicated, and these will need to be removed
 
 ``` r
-baby_name = read_csv("./data/Popular_Baby_Names.csv", col_types = "icccii") %>% 
+baby_name = read_csv("./data/Popular_Baby_Names.csv") %>% 
 janitor::clean_names() %>% 
 distinct() %>% 
 mutate_all(toupper) %>% 
 rename("year" = year_of_birth, "name" = childs_first_name) %>% 
 mutate(ethnicity = replace(ethnicity, ethnicity == "ASIAN AND PACI", "ASIAN AND PACIFIC ISLANDER")) %>% 
 mutate(ethnicity = replace(ethnicity, ethnicity == "BLACK NON HISP","BLACK NON HISPANIC")) %>%
-mutate(ethnicity = replace(ethnicity, ethnicity == "WHITE NON HISP", "WHITE NON HISPANIC"))
+mutate(ethnicity = replace(ethnicity, ethnicity == "WHITE NON HISP", "WHITE NON HISPANIC"))%>%
+mutate(year = as.numeric(year)) %>%
+mutate(rank = as.numeric(rank)) %>%
+mutate(count = as.numeric(count))
 ```
+
+    ## Parsed with column specification:
+    ## cols(
+    ##   `Year of Birth` = col_double(),
+    ##   Gender = col_character(),
+    ##   Ethnicity = col_character(),
+    ##   `Child's First Name` = col_character(),
+    ##   Count = col_double(),
+    ##   Rank = col_double()
+    ## )
 
 #### Produce a well-structured, reader-friendly table showing the rank in popularity of the name “Olivia” as a female baby name over time; this should have rows for ethnicities and columns for year. Produce a similar table showing the most popular name among male children over time.
 
@@ -162,74 +175,81 @@ baby_name %>%
 ```
 
 | year | ethnicity                  | rank |
-| :--- | :------------------------- | :--- |
-| 2016 | ASIAN AND PACIFIC ISLANDER | 1    |
-| 2016 | BLACK NON HISPANIC         | 8    |
-| 2016 | HISPANIC                   | 13   |
-| 2016 | WHITE NON HISPANIC         | 1    |
-| 2015 | ASIAN AND PACIFIC ISLANDER | 1    |
-| 2015 | BLACK NON HISPANIC         | 4    |
-| 2015 | HISPANIC                   | 16   |
-| 2015 | WHITE NON HISPANIC         | 1    |
-| 2014 | ASIAN AND PACIFIC ISLANDER | 1    |
-| 2014 | BLACK NON HISPANIC         | 8    |
-| 2014 | HISPANIC                   | 16   |
-| 2014 | WHITE NON HISPANIC         | 1    |
-| 2013 | ASIAN AND PACIFIC ISLANDER | 3    |
-| 2013 | BLACK NON HISPANIC         | 6    |
-| 2013 | HISPANIC                   | 22   |
-| 2013 | WHITE NON HISPANIC         | 1    |
-| 2012 | ASIAN AND PACIFIC ISLANDER | 3    |
-| 2012 | BLACK NON HISPANIC         | 8    |
-| 2012 | HISPANIC                   | 22   |
-| 2012 | WHITE NON HISPANIC         | 4    |
-| 2011 | ASIAN AND PACIFIC ISLANDER | 4    |
-| 2011 | BLACK NON HISPANIC         | 10   |
-| 2011 | HISPANIC                   | 18   |
-| 2011 | WHITE NON HISPANIC         | 2    |
+| ---: | :------------------------- | ---: |
+| 2016 | ASIAN AND PACIFIC ISLANDER |    1 |
+| 2016 | BLACK NON HISPANIC         |    8 |
+| 2016 | HISPANIC                   |   13 |
+| 2016 | WHITE NON HISPANIC         |    1 |
+| 2015 | ASIAN AND PACIFIC ISLANDER |    1 |
+| 2015 | BLACK NON HISPANIC         |    4 |
+| 2015 | HISPANIC                   |   16 |
+| 2015 | WHITE NON HISPANIC         |    1 |
+| 2014 | ASIAN AND PACIFIC ISLANDER |    1 |
+| 2014 | BLACK NON HISPANIC         |    8 |
+| 2014 | HISPANIC                   |   16 |
+| 2014 | WHITE NON HISPANIC         |    1 |
+| 2013 | ASIAN AND PACIFIC ISLANDER |    3 |
+| 2013 | BLACK NON HISPANIC         |    6 |
+| 2013 | HISPANIC                   |   22 |
+| 2013 | WHITE NON HISPANIC         |    1 |
+| 2012 | ASIAN AND PACIFIC ISLANDER |    3 |
+| 2012 | BLACK NON HISPANIC         |    8 |
+| 2012 | HISPANIC                   |   22 |
+| 2012 | WHITE NON HISPANIC         |    4 |
+| 2011 | ASIAN AND PACIFIC ISLANDER |    4 |
+| 2011 | BLACK NON HISPANIC         |   10 |
+| 2011 | HISPANIC                   |   18 |
+| 2011 | WHITE NON HISPANIC         |    2 |
 
 ``` r
 baby_name %>%
-  group_by(year, ethnicity, name) %>% 
+  group_by(year, ethnicity) %>% 
   filter(rank == 1, gender == "MALE") %>%
   select(year, ethnicity, rank, name) %>%
   knitr::kable(digits = 1)
 ```
 
 | year | ethnicity                  | rank | name    |
-| :--- | :------------------------- | :--- | :------ |
-| 2016 | ASIAN AND PACIFIC ISLANDER | 1    | ETHAN   |
-| 2016 | BLACK NON HISPANIC         | 1    | NOAH    |
-| 2016 | HISPANIC                   | 1    | LIAM    |
-| 2016 | WHITE NON HISPANIC         | 1    | JOSEPH  |
-| 2015 | ASIAN AND PACIFIC ISLANDER | 1    | JAYDEN  |
-| 2015 | BLACK NON HISPANIC         | 1    | NOAH    |
-| 2015 | HISPANIC                   | 1    | LIAM    |
-| 2015 | WHITE NON HISPANIC         | 1    | DAVID   |
-| 2014 | ASIAN AND PACIFIC ISLANDER | 1    | JAYDEN  |
-| 2014 | BLACK NON HISPANIC         | 1    | ETHAN   |
-| 2014 | HISPANIC                   | 1    | LIAM    |
-| 2014 | WHITE NON HISPANIC         | 1    | JOSEPH  |
-| 2013 | ASIAN AND PACIFIC ISLANDER | 1    | JAYDEN  |
-| 2013 | BLACK NON HISPANIC         | 1    | ETHAN   |
-| 2013 | HISPANIC                   | 1    | JAYDEN  |
-| 2013 | WHITE NON HISPANIC         | 1    | DAVID   |
-| 2012 | ASIAN AND PACIFIC ISLANDER | 1    | RYAN    |
-| 2012 | BLACK NON HISPANIC         | 1    | JAYDEN  |
-| 2012 | HISPANIC                   | 1    | JAYDEN  |
-| 2012 | WHITE NON HISPANIC         | 1    | JOSEPH  |
-| 2011 | ASIAN AND PACIFIC ISLANDER | 1    | ETHAN   |
-| 2011 | BLACK NON HISPANIC         | 1    | JAYDEN  |
-| 2011 | HISPANIC                   | 1    | JAYDEN  |
-| 2011 | WHITE NON HISPANIC         | 1    | MICHAEL |
+| ---: | :------------------------- | ---: | :------ |
+| 2016 | ASIAN AND PACIFIC ISLANDER |    1 | ETHAN   |
+| 2016 | BLACK NON HISPANIC         |    1 | NOAH    |
+| 2016 | HISPANIC                   |    1 | LIAM    |
+| 2016 | WHITE NON HISPANIC         |    1 | JOSEPH  |
+| 2015 | ASIAN AND PACIFIC ISLANDER |    1 | JAYDEN  |
+| 2015 | BLACK NON HISPANIC         |    1 | NOAH    |
+| 2015 | HISPANIC                   |    1 | LIAM    |
+| 2015 | WHITE NON HISPANIC         |    1 | DAVID   |
+| 2014 | ASIAN AND PACIFIC ISLANDER |    1 | JAYDEN  |
+| 2014 | BLACK NON HISPANIC         |    1 | ETHAN   |
+| 2014 | HISPANIC                   |    1 | LIAM    |
+| 2014 | WHITE NON HISPANIC         |    1 | JOSEPH  |
+| 2013 | ASIAN AND PACIFIC ISLANDER |    1 | JAYDEN  |
+| 2013 | BLACK NON HISPANIC         |    1 | ETHAN   |
+| 2013 | HISPANIC                   |    1 | JAYDEN  |
+| 2013 | WHITE NON HISPANIC         |    1 | DAVID   |
+| 2012 | ASIAN AND PACIFIC ISLANDER |    1 | RYAN    |
+| 2012 | BLACK NON HISPANIC         |    1 | JAYDEN  |
+| 2012 | HISPANIC                   |    1 | JAYDEN  |
+| 2012 | WHITE NON HISPANIC         |    1 | JOSEPH  |
+| 2011 | ASIAN AND PACIFIC ISLANDER |    1 | ETHAN   |
+| 2011 | BLACK NON HISPANIC         |    1 | JAYDEN  |
+| 2011 | HISPANIC                   |    1 | JAYDEN  |
+| 2011 | WHITE NON HISPANIC         |    1 | MICHAEL |
 
 #### Finally, for male, white non-hispanic children born in 2016, produce a scatter plot showing the number of children with a name (y axis) against the rank in popularity of that name (x axis)
 
 ``` r
-baby_name %>%
-  filter(ethnicity == "WHITE NON HISPANIC", gender == "MALE", year == 2016) %>%
+babyname_plot =
+  baby_name %>%
+  filter(ethnicity == "WHITE NON HISPANIC", gender == "MALE", year == "2016")
+  babyname_plot %>% 
   ggplot(aes(x = rank, y = count)) + 
-  geom_point()
+  geom_point() +
+labs(
+    title = "Baby Name Rank vs. Count, White Males 2016",
+    x = "Popularity Rank",
+    y = "Count",
+    caption = "Data from Open NYC")
 ```
 
-![](Homework2_files/figure-gfm/producing%20scatterplot-1.png)<!-- -->
+![](Homework2_files/figure-gfm/plot%20dataframe-1.png)<!-- -->

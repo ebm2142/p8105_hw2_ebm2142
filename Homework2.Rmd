@@ -10,6 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(readxl)
 library(ggplot2)
+library(ggridges)
 ```
 ### Problem 1
 
@@ -108,14 +109,17 @@ range(pull(snp_pols_unemp, year))
 #### Load and tidy the data. The names of a categorical predictor and the case structure of string variables changed over time; you’ll need to address this in your data cleaning. Also, some rows seem duplicated, and these will need to be removed
 
 ```{r load and tidy baby name data}
-baby_name = read_csv("./data/Popular_Baby_Names.csv", col_types = "icccii") %>% 
+baby_name = read_csv("./data/Popular_Baby_Names.csv") %>% 
 janitor::clean_names() %>% 
 distinct() %>% 
 mutate_all(toupper) %>% 
 rename("year" = year_of_birth, "name" = childs_first_name) %>% 
 mutate(ethnicity = replace(ethnicity, ethnicity == "ASIAN AND PACI", "ASIAN AND PACIFIC ISLANDER")) %>% 
 mutate(ethnicity = replace(ethnicity, ethnicity == "BLACK NON HISP","BLACK NON HISPANIC")) %>%
-mutate(ethnicity = replace(ethnicity, ethnicity == "WHITE NON HISP", "WHITE NON HISPANIC"))
+mutate(ethnicity = replace(ethnicity, ethnicity == "WHITE NON HISP", "WHITE NON HISPANIC"))%>%
+mutate(year = as.numeric(year)) %>%
+mutate(rank = as.numeric(rank)) %>%
+mutate(count = as.numeric(count))
 ```
 
 #### Produce a well-structured, reader-friendly table showing the rank in popularity of the name “Olivia” as a female baby name over time; this should have rows for ethnicities and columns for year. Produce a similar table showing the most popular name among male children over time.
@@ -129,7 +133,7 @@ baby_name %>%
 ```
 ```{r producing male top baby name table}
 baby_name %>%
-  group_by(year, ethnicity, name) %>% 
+  group_by(year, ethnicity) %>% 
   filter(rank == 1, gender == "MALE") %>%
   select(year, ethnicity, rank, name) %>%
   knitr::kable(digits = 1)
@@ -137,9 +141,16 @@ baby_name %>%
 
 #### Finally, for male, white non-hispanic children born in 2016, produce a scatter plot showing the number of children with a name (y axis) against the rank in popularity of that name (x axis)
 
-```{r producing scatterplot}
-baby_name %>%
-  filter(ethnicity == "WHITE NON HISPANIC", gender == "MALE", year == 2016) %>%
+```{r plot dataframe}
+babyname_plot =
+  baby_name %>%
+  filter(ethnicity == "WHITE NON HISPANIC", gender == "MALE", year == "2016")
+  babyname_plot %>% 
   ggplot(aes(x = rank, y = count)) + 
-  geom_point()
+  geom_point() +
+labs(
+    title = "Baby Name Rank vs. Count, White Males 2016",
+    x = "Popularity Rank",
+    y = "Count",
+    caption = "Data from Open NYC")
 ```
